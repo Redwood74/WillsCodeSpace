@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1020" />
+  <title>Leah's NYC Adventure Picker</title>
+  <style>
+    :root{
+      --bg:#08101e;--panel:#101a2d;--panel2:#16233b;--text:#f7f8fb;--muted:#a9b5c8;
+      --line:#2b3a55;--accent:#ff4d8d;--accent2:#70d6ff;--gold:#ffd166;--green:#78e08f;
+      --radius:22px;--shadow:0 18px 50px rgba(0,0,0,.28)
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:radial-gradient(circle at 10% 0%,#1a2b4b 0,#08101e 38%),#08101e;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.4}
+    button{font:inherit}
+    .wrap{width:min(920px,100%);margin:0 auto;padding:20px 16px 56px}
+    .hero{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:28px;background:linear-gradient(145deg,rgba(255,77,141,.17),rgba(112,214,255,.09) 45%,rgba(255,209,102,.08));padding:26px;box-shadow:var(--shadow)}
+    .skyline{height:76px;margin:-8px -10px 16px;display:flex;align-items:flex-end;gap:5px;opacity:.8}
+    .b{background:#31415f;border-radius:4px 4px 0 0;min-width:14px;flex:1}.b:nth-child(3n){background:#3b4f73}.b:after{content:"";display:block;height:3px;width:3px;background:#ffd166;margin:9px auto 0;box-shadow:0 12px #ffd166,0 24px #ffd166;opacity:.7}
+    .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--accent2)}
+    h1{font-size:clamp(30px,6vw,54px);line-height:1.02;margin:6px 0 10px;letter-spacing:-.03em}
+    .sub{color:var(--muted);font-size:17px;max-width:700px;margin:0}
+    .lockbar{margin-top:18px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .lock{background:rgba(8,16,30,.55);border:1px solid var(--line);border-radius:15px;padding:12px 14px;font-size:14px}
+    .lock strong{display:block;color:var(--gold);margin-bottom:2px}
+    .card{margin-top:18px;border:1px solid var(--line);background:rgba(16,26,45,.95);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+    .progress-row{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:18px}
+    .progress-label{font-size:13px;color:var(--muted);font-weight:700}.track{height:8px;background:#22304a;border-radius:20px;overflow:hidden;margin-top:7px;width:190px}.fill{height:100%;background:linear-gradient(90deg,var(--accent),#ff8a5b);transition:width .25s ease}
+    .smallbtn{border:1px solid var(--line);background:#0c1425;color:var(--text);border-radius:12px;min-height:44px;padding:9px 13px;font-weight:700;cursor:pointer}
+    .question{font-size:clamp(23px,4vw,34px);line-height:1.1;margin:6px 0 8px}.help{margin:0;color:var(--muted);font-size:14px}
+    .answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:20px}
+    .answer{min-height:72px;text-align:left;color:var(--text);background:linear-gradient(145deg,#14223a,#0f1a2e);border:1px solid var(--line);border-radius:16px;padding:15px 16px;font-weight:750;cursor:pointer;transition:transform .12s ease,border-color .12s ease,background .12s ease}
+    .answer:active{transform:scale(.985)}.answer:hover{border-color:var(--accent2);background:#172742}.answer:focus-visible,.smallbtn:focus-visible,.primary:focus-visible,.secondary:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
+    .hidden{display:none!important}
+    .resulthead{display:flex;gap:14px;align-items:center}.resulticon{font-size:52px}.resulttitle{font-size:clamp(28px,5vw,44px);margin:0;line-height:1.03}.tag{margin:4px 0 0;color:var(--muted)}
+    .reason{margin-top:16px;background:#0d1728;border:1px solid var(--line);border-radius:14px;padding:14px;color:#dfe7f3}
+    .cols{display:grid;grid-template-columns:1.25fr .75fr;gap:16px;margin-top:16px}.panel{border:1px solid var(--line);background:#0d1728;border-radius:18px;padding:16px}.panel h3{margin:0 0 10px;font-size:17px}
+    .row{display:grid;grid-template-columns:92px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid #24324b;font-size:14px}.row:last-child{border-bottom:0}.time{font-weight:800;color:var(--accent2)}.thing{color:#dce4f0}
+    .runner{font-size:39px}.runnername{font-weight:850;font-size:18px;margin-top:5px}.runnerdesc{color:var(--muted);font-size:14px;margin-top:4px}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}.primary,.secondary{min-height:48px;border-radius:14px;padding:12px 16px;font-weight:850;cursor:pointer}.primary{border:0;background:linear-gradient(135deg,var(--accent),#ff7d57);color:white}.secondary{border:1px solid var(--line);background:#101b30;color:var(--text)}
+    .choicebox{margin-top:14px;border:1px dashed #49607f;border-radius:14px;padding:13px;background:#0b1424;color:#e8eef8;font-size:14px}.choicebox strong{color:var(--green)}
+    .allgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:15px}.option{background:#0d1728;border:1px solid var(--line);border-radius:16px;padding:15px}.option .emo{font-size:31px}.option h4{margin:7px 0 4px}.option p{margin:0;color:var(--muted);font-size:13px}
+    .footer{margin-top:18px;color:#7f8ba0;text-align:center;font-size:12px}.juniors{color:var(--gold);font-weight:800}
+    @media(max-width:660px){.wrap{padding:12px 12px 40px}.hero{padding:20px}.lockbar,.answers,.cols,.allgrid{grid-template-columns:1fr}.track{width:140px}.row{grid-template-columns:78px 1fr}.answer{min-height:64px}.actions>*{flex:1 1 100%}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+  </style>
+</head>
+<body>
+<main class="wrap">
+  <section class="hero">
+    <div class="skyline" aria-hidden="true">
+      <div class="b" style="height:34px"></div><div class="b" style="height:48px"></div><div class="b" style="height:62px"></div><div class="b" style="height:43px"></div><div class="b" style="height:70px"></div><div class="b" style="height:51px"></div><div class="b" style="height:39px"></div><div class="b" style="height:58px"></div><div class="b" style="height:45px"></div><div class="b" style="height:68px"></div><div class="b" style="height:36px"></div>
+    </div>
+    <div class="eyebrow">Wednesday, October 14 · New York City</div>
+    <h1>Leah, NYC is yours. 🗽</h1>
+    <p class="sub">You get one big open day in Manhattan. Answer six fast questions and this app will build the version of New York that sounds most like <em>you</em>.</p>
+    <div class="lockbar">
+      <div class="lock"><strong>Already locked</strong>🎭 Hadestown · 7:30 PM</div>
+      <div class="lock"><strong>Family constitutional law</strong>🍰 Junior’s cheesecake happens.</div>
+    </div>
+  </section>
+
+  <section id="quiz" class="card">
+    <div class="progress-row">
+      <div><div id="progressLabel" class="progress-label">Question 1 of 6</div><div class="track"><div id="progressFill" class="fill" style="width:16.67%"></div></div></div>
+      <button id="resetTop" class="smallbtn" type="button">Start over</button>
+    </div>
+    <h2 id="question" class="question">What sounds most like your kind of New York?</h2>
+    <p class="help">Don’t overthink it. Pick whatever sounds more fun.</p>
+    <div id="answers" class="answers" aria-live="polite"></div>
+  </section>
+
+  <section id="result" class="hidden">
+    <div class="card">
+      <div class="eyebrow">Your NYC match</div>
+      <div class="resulthead"><div id="resultIcon" class="resulticon"></div><div><h2 id="resultTitle" class="resulttitle"></h2><p id="resultTag" class="tag"></p></div></div>
+      <div id="reason" class="reason"></div>
+    </div>
+
+    <div class="cols">
+      <div class="panel">
+        <h3>Your Wednesday</h3>
+        <div id="itinerary"></div>
+      </div>
+      <div class="panel">
+        <h3>Runner-up</h3>
+        <div id="runnerIcon" class="runner"></div>
+        <div id="runnerName" class="runnername"></div>
+        <div id="runnerDesc" class="runnerdesc"></div>
+        <div class="choicebox"><strong>Thursday is easy:</strong><br>The Outsiders → Junior’s cheesecake → SIX.</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="shareChoice" type="button" class="primary">Share my choice 📲</button>
+      <button id="retry" type="button" class="secondary">Try different answers</button>
+      <button id="compare" type="button" class="secondary">Compare all 5</button>
+    </div>
+    <div id="shareFallback" class="choicebox hidden" aria-live="polite"></div>
+  </section>
+
+  <section id="allOptions" class="card hidden">
+    <div class="progress-row"><div><div class="eyebrow">All five adventures</div><h2 class="question" style="font-size:25px;margin-top:5px">Pick with your gut</h2></div><button id="hideAll" class="smallbtn" type="button">Hide</button></div>
+    <div id="allGrid" class="allgrid"></div>
+  </section>
+
+  <div class="footer">Made for Leah’s NYC trip · <span class="juniors">Junior’s remains non-negotiable.</span></div>
+</main>
+
+<script>
+(() => {
+  'use strict';
+  const adventures = {
+    iconic:{icon:'🗽',title:'The Iconic New Yorker',tag:'Statue of Liberty + Ellis Island + Lower Manhattan',blurb:'You want the famous New York things you would actually regret missing.',schedule:[['8:30 AM','Head downtown'],['9:15 AM','Ferry / Statue of Liberty'],['11:15 AM','Ellis Island'],['1:30 PM','Lunch + Lower Manhattan'],['3:30 PM','Return to Midtown / hotel break'],['5:45 PM','Dinner near the Theater District'],['7:30 PM','Hadestown']]},
+    downtown:{icon:'🏙️',title:'The Downtown Explorer',tag:'9/11 Museum + One World + Lower Manhattan',blurb:'You like places with a story and want New York history plus a huge skyline payoff.',schedule:[['9:00 AM','Head downtown'],['9:30 AM','9/11 Memorial & Museum'],['12:00 PM','Lunch downtown'],['1:15 PM','One World Observatory'],['2:45 PM','Wall Street / Lower Manhattan wander'],['4:30 PM','Hotel break'],['5:45 PM','Dinner'],['7:30 PM','Hadestown']]},
+    views:{icon:'🌆',title:'The Main Character',tag:'Edge + High Line + Chelsea + Greenwich Village',blurb:'You want cool photos, skyline views, neighborhoods and a day that feels like being in a movie.',schedule:[['9:30 AM','Edge observation deck'],['11:00 AM','Walk the High Line'],['12:15 PM','Chelsea Market lunch'],['1:45 PM','Greenwich Village + Washington Square'],['4:30 PM','Back to hotel / rest'],['5:45 PM','Dinner'],['7:30 PM','Hadestown']]},
+    culture:{icon:'🎨',title:'The Cultured New Yorker',tag:'Central Park + MoMA + Rockefeller Center',blurb:'You want classic Manhattan: art, Central Park, Fifth Avenue and that movie-version-of-New-York feeling.',schedule:[['9:00 AM','Central Park walk'],['10:30 AM','MoMA'],['1:00 PM','Lunch'],['2:00 PM','Fifth Avenue + Rockefeller Center'],['3:15 PM','Optional skyline view'],['4:30 PM','Hotel break'],['5:45 PM','Dinner'],['7:30 PM','Hadestown']]},
+    vibe:{icon:'🛍️',title:'The NYC Vibe Day',tag:'SoHo + Greenwich Village + food + shopping',blurb:'You would rather experience New York than spend the day checking attractions off a list.',schedule:[['9:30 AM','Sleep in / easy breakfast'],['10:30 AM','SoHo shopping'],['12:45 PM','Lunch'],['2:00 PM','Greenwich Village + Washington Square'],['3:30 PM','Dessert / shops / wander'],['4:45 PM','Hotel break'],['5:45 PM','Dinner'],['7:30 PM','Hadestown']]}
+  };
+
+  const questions=[
+    {q:'What sounds most like your kind of New York?',a:[['See the famous landmarks',{iconic:3,downtown:1}],['Find the coolest views and photo spots',{views:3,culture:1}],['Shop, eat and wander neighborhoods',{vibe:3,views:1}],['See art, parks and classic Manhattan',{culture:3}],['Learn the story of the city',{downtown:3,iconic:1}]]},
+    {q:'Pick the photo you would most want from the trip.',a:[['Me with the Statue of Liberty',{iconic:3}],['Me way above the Manhattan skyline',{views:3,downtown:1}],['Me in SoHo with shopping bags',{vibe:3}],['Central Park / Rockefeller Center',{culture:3}],['Lower Manhattan / One World Trade',{downtown:3}]]},
+    {q:'How scheduled do you want the day to feel?',a:[['Pack it in — I want to see a lot',{iconic:2,downtown:2,culture:1}],['Some plans, but plenty of wandering',{views:2,culture:1}],['Very relaxed — no rushing',{vibe:3,views:1}]]},
+    {q:'Choose one place you would be annoyed to miss.',a:[['Statue of Liberty',{iconic:4}],['9/11 Memorial / One World',{downtown:4}],['Edge / High Line',{views:4}],['Central Park / MoMA',{culture:4}],['SoHo / Greenwich Village',{vibe:4}]]},
+    {q:'Museum question. Be honest.',a:[['Yes — museums can be really interesting',{downtown:2,culture:2,iconic:1}],['Maybe one, if it is actually worth it',{culture:1,downtown:1,views:1}],['Please do not turn vacation into school',{vibe:3,views:2}]]},
+    {q:'Final tiebreaker: what do you want New York to feel like?',a:[['“I finally saw NYC.”',{iconic:3}],['“That was actually meaningful.”',{downtown:3}],['“That was SO cool.”',{views:3}],['“That felt like classic Manhattan.”',{culture:3}],['“I could hang out here all day.”',{vibe:3}]]}
+  ];
+
+  const el=id=>document.getElementById(id);
+  let step=0;
+  let scores={iconic:0,downtown:0,views:0,culture:0,vibe:0};
+  let winnerKey='';
+
+  function renderQuestion(){
+    const q=questions[step];
+    el('question').textContent=q.q;
+    el('progressLabel').textContent=`Question ${step+1} of ${questions.length}`;
+    el('progressFill').style.width=`${((step+1)/questions.length)*100}%`;
+    const box=el('answers'); box.innerHTML='';
+    q.a.forEach(([label,points])=>{
+      const b=document.createElement('button');
+      b.type='button'; b.className='answer'; b.textContent=label;
+      b.addEventListener('click',()=>{
+        for(const [k,v] of Object.entries(points)) scores[k]+=v;
+        if(step<questions.length-1){step++;renderQuestion();window.scrollTo({top:document.getElementById('quiz').offsetTop-12,behavior:'smooth'});} else showResult();
+      });
+      box.appendChild(b);
+    });
+  }
+
+  function rank(){return Object.entries(scores).sort((a,b)=>b[1]-a[1]);}
+  function showResult(){
+    const ranked=rank(); winnerKey=ranked[0][0]; const runnerKey=ranked[1][0];
+    const w=adventures[winnerKey],r=adventures[runnerKey];
+    el('quiz').classList.add('hidden'); el('result').classList.remove('hidden');
+    el('resultIcon').textContent=w.icon; el('resultTitle').textContent=w.title; el('resultTag').textContent=w.tag;
+    el('reason').innerHTML=`<strong>Why this won:</strong> ${w.blurb}`;
+    const it=el('itinerary'); it.innerHTML='';
+    w.schedule.forEach(([time,thing])=>{const row=document.createElement('div');row.className='row';row.innerHTML=`<div class="time">${time}</div><div class="thing">${thing}</div>`;it.appendChild(row);});
+    el('runnerIcon').textContent=r.icon; el('runnerName').textContent=r.title; el('runnerDesc').textContent=r.tag;
+    el('shareFallback').classList.add('hidden');
+    window.scrollTo({top:el('result').offsetTop-12,behavior:'smooth'});
+  }
+
+  function reset(){step=0;scores={iconic:0,downtown:0,views:0,culture:0,vibe:0};winnerKey='';el('result').classList.add('hidden');el('allOptions').classList.add('hidden');el('quiz').classList.remove('hidden');renderQuestion();window.scrollTo({top:el('quiz').offsetTop-12,behavior:'smooth'});}
+
+  function showAll(){
+    const grid=el('allGrid');grid.innerHTML='';
+    Object.values(adventures).forEach(a=>{const d=document.createElement('div');d.className='option';d.innerHTML=`<div class="emo">${a.icon}</div><h4>${a.title}</h4><p>${a.tag}</p><p style="margin-top:9px;color:#dfe7f3">${a.blurb}</p>`;grid.appendChild(d);});
+    el('allOptions').classList.remove('hidden');window.scrollTo({top:el('allOptions').offsetTop-12,behavior:'smooth'});
+  }
+
+  async function share(){
+    if(!winnerKey) return;
+    const a=adventures[winnerKey];
+    const text=`Dad, I choose ${a.icon} ${a.title}: ${a.tag}. Let’s do this one!`;
+    if(navigator.share){
+      try{await navigator.share({title:"My NYC Adventure",text});return;}catch(err){if(err && err.name==='AbortError')return;}
+    }
+    const box=el('shareFallback'); box.classList.remove('hidden'); box.textContent=text+'  (Press and hold to copy, then text Dad.)';
+  }
+
+  el('resetTop').addEventListener('click',reset);
+  el('retry').addEventListener('click',reset);
+  el('compare').addEventListener('click',showAll);
+  el('hideAll').addEventListener('click',()=>el('allOptions').classList.add('hidden'));
+  el('shareChoice').addEventListener('click',share);
+  renderQuestion();
+})();
+</script>
+</body>
+</html>
